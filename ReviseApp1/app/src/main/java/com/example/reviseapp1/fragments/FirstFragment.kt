@@ -5,15 +5,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.reviseapp1.R
 import com.example.reviseapp1.databinding.FragmentFirstBinding
+import com.example.reviseapp1.viewModel.FragmentViewModel
 
 private const val TAG = "FirstFragment tag"
 
 class FirstFragment : Fragment() {
 
     private lateinit var binding: FragmentFirstBinding
+    private  val viewModel: FragmentViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,6 +34,8 @@ class FirstFragment : Fragment() {
             findNavController().navigate(R.id.secondFragment, args = Bundle().apply {
                 putString("DATA",submittedData)
             })
+            val intData = binding.viewModelData.text.toString().toInt()
+            viewModel.setSharedData(intData)
         }
     }
 }

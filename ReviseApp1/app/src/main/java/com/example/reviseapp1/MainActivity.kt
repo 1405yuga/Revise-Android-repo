@@ -2,10 +2,15 @@ package com.example.reviseapp1
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import com.example.reviseapp1.database.BaseApplication
 import com.example.reviseapp1.databinding.ActivityMainBinding
+import com.example.reviseapp1.viewModel.FragmentViewModel
+import com.example.reviseapp1.viewModel.FragmentViewModelFactory
 
 private const val TAG = "MainActivity tag"
 

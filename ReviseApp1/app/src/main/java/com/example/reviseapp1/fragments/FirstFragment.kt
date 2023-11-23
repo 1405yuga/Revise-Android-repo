@@ -6,18 +6,26 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.reviseapp1.R
+import com.example.reviseapp1.database.BaseApplication
 import com.example.reviseapp1.database.DataBaseModel
 import com.example.reviseapp1.databinding.FragmentFirstBinding
 import com.example.reviseapp1.viewModel.FragmentViewModel
+import com.example.reviseapp1.viewModel.FragmentViewModelFactory
 
 private const val TAG = "FirstFragment tag"
 
 class FirstFragment : Fragment() {
 
     private lateinit var binding: FragmentFirstBinding
-    private val viewModel: FragmentViewModel by activityViewModels()
+    private val viewModel: FragmentViewModel by activityViewModels {
+        FragmentViewModelFactory(
+            (requireActivity().application as BaseApplication).database
+                .databaseDao()
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

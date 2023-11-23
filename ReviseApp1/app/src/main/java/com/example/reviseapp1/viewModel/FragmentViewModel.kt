@@ -3,8 +3,12 @@ package com.example.reviseapp1.viewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.reviseapp1.database.DataBaseModel
+import com.example.reviseapp1.database.DatabaseDao
+import kotlinx.coroutines.launch
 
-class FragmentViewModel : ViewModel() {
+class FragmentViewModel(private  val databaseDao: DatabaseDao) : ViewModel() {
 
     private var _sharedData = MutableLiveData<Int>()
     val sharedData : LiveData<Int> = _sharedData
@@ -12,5 +16,12 @@ class FragmentViewModel : ViewModel() {
     fun setSharedData(data:Int){
         _sharedData.value = data
     }
+
+    fun addData(data : DataBaseModel){
+        viewModelScope.launch {
+            databaseDao.addData(data)
+        }
+    }
+
 
 }

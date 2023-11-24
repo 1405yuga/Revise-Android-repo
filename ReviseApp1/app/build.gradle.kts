@@ -59,4 +59,7 @@ dependencies {
     // To use Kotlin Symbol Processing (KSP)
     ksp ("androidx.room:room-compiler:$room_version")
 
+    //biometrics
+    implementation ("androidx.biometric:biometric:1.1.0")
+
 }

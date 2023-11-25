@@ -1,8 +1,6 @@
 package com.example.reviseapp1
 
 import android.content.Intent
-import android.hardware.biometrics.BiometricManager.Authenticators.BIOMETRIC_STRONG
-import android.hardware.biometrics.BiometricManager.Authenticators.DEVICE_CREDENTIAL
 import android.os.Build
 import android.os.Bundle
 import android.view.View
@@ -12,9 +10,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricManager.Authenticators
 import androidx.biometric.BiometricPrompt
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.example.reviseapp1.databinding.ActivityMainBinding
+import java.util.concurrent.Executor
 
 private const val TAG = "MainActivity tag"
 
@@ -22,6 +22,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
+    private lateinit var biometricPrompt: BiometricPrompt
+    private lateinit var promptInfo: BiometricPrompt.PromptInfo
 
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,6 +32,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         checkBiometricSupport()
+        createBiometricPromptInfo()
+        handleBiometricPromptResult()
+
         val navHost =
             supportFragmentManager.findFragmentById(binding.navHostFragmentContainer.id) as NavHostFragment
         navController = navHost.navController
@@ -41,14 +46,44 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+
         binding.checkBiometricsbutton.setOnClickListener {
-            //create prompt
-            val promptInfo = BiometricPrompt.PromptInfo.Builder()
-                .setTitle("Biometric login for my app")
-                .setSubtitle("Log in using your biometric credential")
-                .setAllowedAuthenticators(Authenticators.BIOMETRIC_STRONG or Authenticators.DEVICE_CREDENTIAL)
-                .build()
+            biometricPrompt.authenticate(promptInfo)
         }
+    }
+
+    private fun handleBiometricPromptResult() {
+        //create executor
+        val executor: Executor = ContextCompat.getMainExecutor(this)
+
+        // result of authentication
+
+        biometricPrompt=
+            BiometricPrompt(this, executor, object : BiometricPrompt.AuthenticationCallback() {
+                override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                    super.onAuthenticationError(errorCode, errString)
+                    notifyUser("Authentication error : $errString")
+                }
+
+                override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                    super.onAuthenticationSucceeded(result)
+                    notifyUser("Authentication successful")
+                }
+
+                override fun onAuthenticationFailed() {
+                    super.onAuthenticationFailed()
+                    notifyUser("Authentication failed")
+                }
+            })
+    }
+
+    private fun createBiometricPromptInfo() {
+        //create prompt
+        promptInfo = BiometricPrompt.PromptInfo.Builder()
+            .setTitle("Biometric login for my app")
+            .setSubtitle("Log in using your biometric credential")
+            .setAllowedAuthenticators(Authenticators.BIOMETRIC_STRONG or Authenticators.DEVICE_CREDENTIAL)
+            .build()
     }
 
     private fun checkBiometricSupport() {

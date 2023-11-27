@@ -28,6 +28,12 @@
         android:layout_height="wrap_content"
         android:text="Check biometrics"
         android:layout_marginBottom="12dp"/>
+    <Button
+        android:id="@+id/sendNotificationbutton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Send notification"
+        android:layout_marginBottom="12dp"/>
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/navHostFragmentContainer"
         android:layout_width="match_parent"

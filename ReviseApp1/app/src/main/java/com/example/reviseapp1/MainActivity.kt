@@ -1,9 +1,17 @@
 package com.example.reviseapp1
 
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.widget.RemoteViews
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -25,6 +33,12 @@ class MainActivity : AppCompatActivity() {
     private lateinit var biometricPrompt: BiometricPrompt
     private lateinit var promptInfo: BiometricPrompt.PromptInfo
 
+    private lateinit var notificationChannel: NotificationChannel
+    private lateinit var notificationManager: NotificationManager
+    private lateinit var notificationBuilder: Notification.Builder
+    private val channel_ID = "i.apps.notifications"
+    private val description = "Test notification"
+
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,17 +53,67 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager.findFragmentById(binding.navHostFragmentContainer.id) as NavHostFragment
         navController = navHost.navController
 
-        binding.nextbutton.setOnClickListener {
-            val textValue = binding.getText.text.toString()
-            val intent = Intent(this, MainActivity2::class.java)
-            intent.putExtra("STRING_VALUE", textValue)
-            startActivity(intent)
+        binding.apply {
+            nextbutton.setOnClickListener {
+                val textValue = binding.getText.text.toString()
+                val intent = Intent(this@MainActivity, MainActivity2::class.java)
+                intent.putExtra("STRING_VALUE", textValue)
+                startActivity(intent)
+            }
+
+            checkBiometricsbutton.setOnClickListener {
+                biometricPrompt.authenticate(promptInfo)
+            }
+
+            //background notification
+            notificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+            sendNotificationbutton.setOnClickListener {
+                buildNotification()
+
+                //send notification
+                notificationManager.notify(123, notificationBuilder.build())
+
+            }
         }
 
 
-        binding.checkBiometricsbutton.setOnClickListener {
-            biometricPrompt.authenticate(promptInfo)
+    }
+
+    private fun buildNotification() {
+        val intent = Intent(this, AfterNotification::class.java)
+
+        //immutable since no changes after clicking notification
+        val pendingIntent =
+            PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+
+        //api>=26 requires notification channel
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            notificationChannel =
+                NotificationChannel(channel_ID, description, NotificationManager.IMPORTANCE_HIGH)
+            notificationChannel.enableLights(true)
+            notificationChannel.lightColor = Color.GREEN
+            notificationManager.createNotificationChannel(notificationChannel)
+
+            notificationBuilder = Notification.Builder(this,channel_ID)
+                .setSmallIcon(R.drawable.notification_icon_24)
+                .setContentTitle("Random notification")
+                .setContentText("Testing random notification")
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
         }
+
+        else{
+            val contentView = RemoteViews(packageName, R.layout.activity_after_notification)
+
+            notificationBuilder = Notification.Builder(this)
+                .setContent(contentView)
+                .setSmallIcon(R.drawable.notification_icon_24)
+                .setContentIntent(pendingIntent)
+        }
+
+
     }
 
     private fun handleBiometricPromptResult() {
@@ -58,7 +122,7 @@ class MainActivity : AppCompatActivity() {
 
         // result of authentication
 
-        biometricPrompt=
+        biometricPrompt =
             BiometricPrompt(this, executor, object : BiometricPrompt.AuthenticationCallback() {
                 override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
                     super.onAuthenticationError(errorCode, errString)

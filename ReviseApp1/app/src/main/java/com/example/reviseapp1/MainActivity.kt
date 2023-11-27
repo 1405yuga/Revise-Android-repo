@@ -72,10 +72,11 @@ class MainActivity : AppCompatActivity() {
                 getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
             sendNotificationbutton.setOnClickListener {
-                buildNotification()
-
                 //to create new notification change the id
                 id++
+
+                buildNotification()
+
                 //send notification
                 notificationManager.notify(id, notificationBuilder.build())
 
@@ -87,10 +88,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun buildNotification() {
         val intent = Intent(this, AfterNotification::class.java)
+        intent.putExtra("NOTIFICATION_MESSAGE",id)
 
         //immutable since no changes after clicking notification
         val pendingIntent =
-            PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+            PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_MUTABLE)
 
         //api>=26 requires notification channel
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -105,7 +107,7 @@ class MainActivity : AppCompatActivity() {
                 .setContentTitle("Random notification")
                 .setContentText("Testing random notification")
                 .setContentIntent(pendingIntent)
-                .setAutoCancel(false)
+                .setAutoCancel(true)
         }
 
         else{

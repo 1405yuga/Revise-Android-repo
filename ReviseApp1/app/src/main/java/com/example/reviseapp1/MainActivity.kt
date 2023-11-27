@@ -39,6 +39,8 @@ class MainActivity : AppCompatActivity() {
     private val channel_ID = "i.apps.notifications"
     private val description = "Test notification"
 
+    private var id = 0
+
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,8 +74,10 @@ class MainActivity : AppCompatActivity() {
             sendNotificationbutton.setOnClickListener {
                 buildNotification()
 
+                //to create new notification change the id
+                id++
                 //send notification
-                notificationManager.notify(123, notificationBuilder.build())
+                notificationManager.notify(id, notificationBuilder.build())
 
             }
         }
@@ -101,7 +105,7 @@ class MainActivity : AppCompatActivity() {
                 .setContentTitle("Random notification")
                 .setContentText("Testing random notification")
                 .setContentIntent(pendingIntent)
-                .setAutoCancel(true)
+                .setAutoCancel(false)
         }
 
         else{

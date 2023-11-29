@@ -10,6 +10,8 @@ import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.widget.RemoteViews
 import android.widget.Toast
@@ -80,6 +82,7 @@ class MainActivity : AppCompatActivity() {
                 //send notification
                 notificationManager.notify(id, notificationBuilder.build())
 
+
             }
         }
 
@@ -107,6 +110,7 @@ class MainActivity : AppCompatActivity() {
                 .setContentTitle("Random notification")
                 .setContentText("Testing random notification")
                 .setContentIntent(pendingIntent)
+                .setOngoing(true) // to keep notification in notification bar
                 .setAutoCancel(true)
         }
 

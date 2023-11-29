@@ -77,6 +77,10 @@ class MainActivity : AppCompatActivity() {
                 //to create new notification change the id
                 id++
 
+                Handler(Looper.getMainLooper()).postDelayed({
+                    //to remove notification
+                    notificationManager.cancel(id)
+                },5000)
                 buildNotification()
 
                 //send notification

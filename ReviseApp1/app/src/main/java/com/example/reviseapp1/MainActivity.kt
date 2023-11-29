@@ -6,7 +6,6 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -77,15 +76,15 @@ class MainActivity : AppCompatActivity() {
                 //to create new notification change the id
                 id++
 
-                Handler(Looper.getMainLooper()).postDelayed({
-                    //to remove notification
-                    notificationManager.cancel(id)
-                },5000)
                 buildNotification()
 
                 //send notification
                 notificationManager.notify(id, notificationBuilder.build())
 
+                Handler(Looper.getMainLooper()).postDelayed({
+                    //to remove notification
+                    notificationManager.cancel(id)
+                }, 5000)
 
             }
         }
@@ -95,7 +94,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun buildNotification() {
         val intent = Intent(this, AfterNotification::class.java)
-        intent.putExtra("NOTIFICATION_MESSAGE",id)
+        intent.putExtra("NOTIFICATION_MESSAGE", id)
 
         //immutable since no changes after clicking notification
         val pendingIntent =
@@ -109,16 +108,14 @@ class MainActivity : AppCompatActivity() {
             notificationChannel.lightColor = Color.GREEN
             notificationManager.createNotificationChannel(notificationChannel)
 
-            notificationBuilder = Notification.Builder(this,channel_ID)
+            notificationBuilder = Notification.Builder(this, channel_ID)
                 .setSmallIcon(R.drawable.notification_icon_24)
                 .setContentTitle("Random notification")
                 .setContentText("Testing random notification")
                 .setContentIntent(pendingIntent)
                 .setOngoing(true) // to keep notification in notification bar
                 .setAutoCancel(true)
-        }
-
-        else{
+        } else {
             val contentView = RemoteViews(packageName, R.layout.activity_after_notification)
 
             notificationBuilder = Notification.Builder(this)

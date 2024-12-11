@@ -2,6 +2,7 @@ package com.example.pagerapp
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.biometric.BiometricManager
 import com.example.pagerapp.databinding.ActivityMainBinding
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -14,6 +15,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        //ViewPager--------------------------------------------------------
         binding.pager.adapter = ViewPagerAdapter(this)
 
         TabLayoutMediator(binding.tabLayout, binding.pager) { tab: TabLayout.Tab, position: Int ->
@@ -35,6 +37,14 @@ class MainActivity : AppCompatActivity() {
             }
 
         }.attach()
-    }
 
+        //Biometrics----------------------------------------------------------
+        val biometricManager = androidx.biometric.BiometricManager.from(this)
+        //check
+        when (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.DEVICE_CREDENTIAL)) {
+            BiometricManager.BIOMETRIC_SUCCESS ->{
+
+            }
+        }
+    }
 }

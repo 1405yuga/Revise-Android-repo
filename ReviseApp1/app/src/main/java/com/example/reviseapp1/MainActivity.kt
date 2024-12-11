@@ -94,7 +94,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun buildNotification() {
         val intent = Intent(this, AfterNotification::class.java)
-        intent.putExtra("NOTIFICATION_MESSAGE", id)
+        intent.putExtra("NOTIFICATION_MESSAGE", 1234)
 
         //immutable since no changes after clicking notification
         val pendingIntent =

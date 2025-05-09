@@ -5,6 +5,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
+import com.example.overall.R
 import com.example.overall.databinding.ItemCardBinding
 import com.example.overall.model.Item
 
@@ -51,8 +53,10 @@ class ItemListAdapter : ListAdapter<Item, ItemListAdapter.ItemViewHolder>(DiffCa
     class ItemViewHolder(private val binding: ItemCardBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Item) {
-            binding.apply {
-                textName.text = item.name
+            binding.textName.text = item.name
+            binding.image.load(item.image) {
+                placeholder(R.drawable.loading_static)
+                error(R.drawable.outline_error_24)
             }
         }
 

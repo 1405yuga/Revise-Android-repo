@@ -54,4 +54,6 @@ dependencies {
     //retrofit----------------------------
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
+    //coil---------------------------------
+    implementation ("io.coil-kt:coil:1.1.1")
 }

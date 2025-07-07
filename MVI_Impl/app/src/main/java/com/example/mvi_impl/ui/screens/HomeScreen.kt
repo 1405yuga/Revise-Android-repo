@@ -1,6 +1,7 @@
 package com.example.mvi_impl.ui.screens
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -8,9 +9,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -39,14 +44,15 @@ fun HomeScreen(viewModel: HomeViewModel = viewModel(), modifier: Modifier = Modi
             .padding(16.dp)
     ) {
         OutlinedTextField(
-            value = query,
-            onValueChange = {
-                query = it
-                viewModel.handleIntent(UserIntent.SearchItems(it))
-            },
-            label = { Text("Search...") },
-            modifier = Modifier.fillMaxWidth()
+            value = query, onValueChange = {
+            query = it
+            viewModel.handleIntent(UserIntent.SearchItems(it))
+        }, label = { Text("Search...") }, modifier = Modifier.fillMaxWidth()
         )
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(onClick = { viewModel.handleIntent(UserIntent.AddItem("New one")) }) {
+            Text("Add")
+        }
         Spacer(modifier = Modifier.height(16.dp))
         when (val state = screenState) {
             is ScreenState.Preload -> {
@@ -62,7 +68,19 @@ fun HomeScreen(viewModel: HomeViewModel = viewModel(), modifier: Modifier = Modi
             is ScreenState.Loaded -> {
                 LazyColumn {
                     items(state.result) { item ->
-                        Text(text = item.name, style = MaterialTheme.typography.bodyMedium)
+                        Row {
+                            Text(
+                                text = item.name,
+                                style = MaterialTheme.typography.bodyMedium,
+                                modifier = Modifier.weight(1f)
+                            )
+                            IconButton(onClick = {
+                                viewModel.handleIntent(UserIntent.DeleteItemAt(item.id))
+                            }) {
+                                Icon(Icons.Default.Delete, contentDescription = "delete item")
+                            }
+
+                        }
                         HorizontalDivider()
                     }
                 }

@@ -14,10 +14,30 @@ class HomeViewModel : ViewModel() {
     private val _screenState = MutableStateFlow<ScreenState<List<Item>>>(ScreenState.Preload())
     val screenState: StateFlow<ScreenState<List<Item>>> = _screenState
 
+    companion object {
+        var someId = 100
+    }
+
     fun handleIntent(intent: UserIntent) {
         when (intent) {
             is UserIntent.FetchAllItems -> fetchItems()
             is UserIntent.SearchItems -> searchItems(intent.query)
+            is UserIntent.AddItem -> addItem(intent.name)
+            is UserIntent.DeleteItemAt -> deleteItemById(intent.id)
+        }
+    }
+
+    private fun addItem(namme: String) {
+        viewModelScope.launch {
+            itemRepository.addItem(Item(someId++, namme))
+            fetchItems()
+        }
+    }
+
+    private fun deleteItemById(id: Int) {
+        viewModelScope.launch {
+            itemRepository.deleteItem(itemId = id)
+            fetchItems()
         }
     }
 

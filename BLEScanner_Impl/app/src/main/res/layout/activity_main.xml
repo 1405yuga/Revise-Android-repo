@@ -9,18 +9,25 @@
     tools:context=".MainActivity">
 
     <Button
-        android:id="@+id/scanButton"
+        android:id="@+id/startButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:minHeight="48dp"
-        android:text="Scan Bluetooth devices" />
+        android:text="START" />
+
+    <Button
+        android:id="@+id/stopButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:minHeight="48dp"
+        android:text="STOP" />
 
     <TextView
         android:id="@+id/resultText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="28sp"
         tools:text="Hello World!" />
 
 </LinearLayout>
